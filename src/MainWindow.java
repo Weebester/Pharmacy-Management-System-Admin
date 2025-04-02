@@ -5,9 +5,10 @@ public class MainWindow extends JFrame {
 
     JTabbedPane Tabs = new JTabbedPane();
     LoginTab LoginT = new LoginTab();
+    AccountTab AccountT=new AccountTab();
 
     public void SetTabsState(boolean MedAccess,boolean pharmaAccess){
-        Tabs.setEnabledAt(1,MedAccess);
+        Tabs.setEnabledAt(1,pharmaAccess);
     }
 
     public void SetTab(int index){
@@ -21,7 +22,7 @@ public class MainWindow extends JFrame {
         setSize(1280, 720);
         setMinimumSize(new Dimension(800,600));
         Tabs.add("Login",LoginT);
-        Tabs.add("Temp",new JPanel());
+        Tabs.add("Accounts",AccountT);
         SetTabsState(false,false);
         add(Tabs);
         setVisible(true);

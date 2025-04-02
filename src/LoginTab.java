@@ -39,8 +39,8 @@ public class LoginTab extends JPanel {
         Login.addActionListener(e -> {
             try {
                 ApiCaller.Login(AdminIDField.getText(), String.copyValueOf(PasswordField.getPassword()));
-            } catch (IOException | InterruptedException ex) {
-                JOptionPane.showMessageDialog(null, "Something went wrong!", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         });
@@ -67,6 +67,6 @@ public class LoginTab extends JPanel {
         add(PasswordL, new float[]{0.1f, 0.45f, 0.6f, 0.15f, 30.0f});
         add(AdminIDField, new float[]{0.2f, 0.2f, 0.6f, 0.15f, 30.0f});
         add(PasswordField, new float[]{0.2f, 0.45f, 0.6f, 0.15f, 30.0f});
-        add(showPasswordCheckbox , new float[]{0.45f, 0.6f, 0.2f, 0.1f, 25.0f});
+        add(showPasswordCheckbox, new float[]{0.45f, 0.6f, 0.2f, 0.1f, 25.0f});
     }
 }
