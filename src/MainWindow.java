@@ -3,6 +3,11 @@ import java.awt.*;
 
 public class MainWindow extends JFrame {
 
+    static Color BG=new Color(221, 221, 221);
+    static Color Comp=new Color(0, 128, 128);
+    static Color Comp2=new Color(250, 0, 96);
+    static Color TexComp=new Color(238, 238, 238);
+
     JTabbedPane Tabs = new JTabbedPane();
     LoginTab LoginT = new LoginTab();
     AccountTab AccountT=new AccountTab();

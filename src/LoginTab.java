@@ -16,15 +16,15 @@ public class LoginTab extends JPanel {
     LoginTab() {
         setLayout(new RelativeLayout());
 
-        setBackground(Color.decode("#dddddd"));
+        setBackground(MainWindow.BG);
         Login.putClientProperty("JButton.buttonType", "roundRect");
-        Login.setBackground(Color.decode("#008080"));
-        Login.setForeground(Color.decode("#eeeeee"));
+        Login.setBackground(MainWindow.Comp);
+        Login.setForeground(MainWindow.TexComp);
         Login.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
 
         Logout.putClientProperty("JButton.buttonType", "roundRect");
-        Logout.setBackground(Color.decode("#fa0060"));
-        Logout.setForeground(Color.decode("#eeeeee"));
+        Logout.setBackground(MainWindow.Comp2);
+        Logout.setForeground(MainWindow.TexComp);
         Logout.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
 
         AdminL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));

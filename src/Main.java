@@ -1,5 +1,6 @@
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     static MainWindow MainW;
