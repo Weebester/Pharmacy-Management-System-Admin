@@ -1,8 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 public class LoginTab extends JPanel {
+
 
     JButton Login = new JButton("Login");
     JButton Logout = new JButton("Logout");
@@ -11,20 +11,47 @@ public class LoginTab extends JPanel {
     JLabel PasswordL = new JLabel("Password");
     JPasswordField PasswordField = new JPasswordField("");
     JCheckBox showPasswordCheckbox = new JCheckBox("Show Password");
+    JToggleButton theme= new JToggleButton("Go Dark");
+
+    public void UpdateTheme(){
+        setBackground(MainWindow.BG);
+        Login.setBackground(MainWindow.Comp);
+        Login.setForeground(MainWindow.TexComp);
+        Logout.setBackground(MainWindow.Comp2);
+        Logout.setForeground(MainWindow.TexComp);
+        AdminL.setForeground(MainWindow.Tex);
+        PasswordL.setForeground(MainWindow.Tex);
+        showPasswordCheckbox.setForeground(MainWindow.Tex);
+    }
 
 
     LoginTab() {
         setLayout(new RelativeLayout());
 
-        setBackground(MainWindow.BG);
+        theme.putClientProperty("JButton.buttonType", "roundRect");
+        theme.setBackground(Color.darkGray);
+        theme.setForeground(Color.WHITE);
+        theme.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+        theme.addActionListener(e->{
+            if(theme.isSelected()){
+                theme.setBackground(Color.WHITE);
+                theme.setForeground(Color.BLACK);
+                theme.setText("Go Light");
+                Main.MainW.SetThemeDark(true);
+            } else{
+                theme.setBackground(Color.darkGray);
+                theme.setForeground(Color.WHITE);
+                Main.MainW.SetThemeDark(false);
+                theme.setText("Go Dark");
+            }
+        });
+
+
+
         Login.putClientProperty("JButton.buttonType", "roundRect");
-        Login.setBackground(MainWindow.Comp);
-        Login.setForeground(MainWindow.TexComp);
         Login.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
 
         Logout.putClientProperty("JButton.buttonType", "roundRect");
-        Logout.setBackground(MainWindow.Comp2);
-        Logout.setForeground(MainWindow.TexComp);
         Logout.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
 
         AdminL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
@@ -68,5 +95,6 @@ public class LoginTab extends JPanel {
         add(AdminIDField, new float[]{0.2f, 0.2f, 0.6f, 0.15f, 30.0f});
         add(PasswordField, new float[]{0.2f, 0.45f, 0.6f, 0.15f, 30.0f});
         add(showPasswordCheckbox, new float[]{0.45f, 0.6f, 0.2f, 0.1f, 25.0f});
+        add(theme,new float[]{0.025f, 0.05f, 0.1f, 0.075f, 25.0f});
     }
 }
