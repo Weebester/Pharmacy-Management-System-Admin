@@ -74,11 +74,11 @@ public class AccountTab extends JPanel {
                 }
         );
 
-        for (Component X:PhListContent.getComponents()) if (X instanceof pharmacyOption temp) temp.UpdateTheme();
+        for (Component X : PhListContent.getComponents()) if (X instanceof pharmacyOption temp) temp.UpdateTheme();
 
     }
 
-    public void triggerFetch(String UID){
+    public void triggerFetch(String UID) {
         AccountIDField.setText(UID);
         FetchAccount.doClick();
     }
