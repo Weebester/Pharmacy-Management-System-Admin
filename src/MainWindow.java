@@ -9,7 +9,7 @@ public class MainWindow extends JFrame {
     static Color TexComp = new Color(238, 238, 238);
     static Color Tex = new Color(40, 40, 40);
 
-    public  void SetThemeDark(boolean theme) {
+    public void SetThemeDark(boolean theme) {
         if (theme) {
             BG = new Color(70, 70, 70);
             Comp = new Color(0, 200, 180);
@@ -23,15 +23,17 @@ public class MainWindow extends JFrame {
         }
         LoginT.UpdateTheme();
         AccountT.UpdateTheme();
-
+        PharmacyT.UpdateTheme();
     }
 
     JTabbedPane Tabs = new JTabbedPane();
     LoginTab LoginT = new LoginTab();
     AccountTab AccountT = new AccountTab();
+    PharmacyTab PharmacyT = new PharmacyTab();
 
     public void SetTabsState(boolean MedAccess, boolean pharmaAccess) {
         Tabs.setEnabledAt(1, pharmaAccess);
+        Tabs.setEnabledAt(2,pharmaAccess);
     }
 
     public void SetTab(int index) {
@@ -46,8 +48,10 @@ public class MainWindow extends JFrame {
         setMinimumSize(new Dimension(800, 600));
         Tabs.add("Login", LoginT);
         Tabs.add("Accounts", AccountT);
-        SetTabsState(false, false);
-        //SetTabsState(true,true);
+        Tabs.add("Pharmacies",PharmacyT);
+        Tabs.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        //SetTabsState(false, false);
+        SetTabsState(true,true);
         add(Tabs);
         SetThemeDark(false);
         setVisible(true);

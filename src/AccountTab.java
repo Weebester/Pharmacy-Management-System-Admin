@@ -42,23 +42,6 @@ public class AccountTab extends JPanel {
         status.setForeground(MainWindow.Tex);
         email.setForeground(MainWindow.Tex);
 
-        for (Component X:PhListContent.getComponents()){
-            if(X instanceof pharmacyOption){
-                pharmacyOption temp=(pharmacyOption) X;
-                temp.UpdateTheme();
-            }
-
-        }
-
-    }
-
-
-    AccountTab() {
-        setLayout(new RelativeLayout());
-        PhListContent.setLayout(new GridLayout(0, 1));
-        PhList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        PhList.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        PhList.setBorder(null);
         PhList.getVerticalScrollBar().setUI(
                 new BasicScrollBarUI() {
 
@@ -84,19 +67,35 @@ public class AccountTab extends JPanel {
 
                     @Override
                     protected void configureScrollBarColors() {
-                        // Customize the scrollbar colors
-                        thumbColor = MainWindow.Comp; // Teal thumb color
-                        trackColor = MainWindow.BG; // Light teal track color
-                        thumbHighlightColor = new Color(0, 100, 100); // Darker teal highlight
+                        thumbColor = MainWindow.Comp;
+                        trackColor = MainWindow.BG;
+                        thumbHighlightColor = new Color(0, 100, 100);
                     }
                 }
         );
+
+        for (Component X:PhListContent.getComponents()) if (X instanceof pharmacyOption temp) temp.UpdateTheme();
+
+    }
+
+    public void triggerFetch(String UID){
+        AccountIDField.setText(UID);
+        FetchAccount.doClick();
+    }
+
+    AccountTab() {
+        setLayout(new RelativeLayout());
+
+        PhListContent.setLayout(new GridLayout(0, 1));
+        PhList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        PhList.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        PhList.setBorder(null);
 
         FetchAccount.putClientProperty("JButton.buttonType", "roundRect");
         FetchAccount.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         FetchAccount.addActionListener(e -> {
             PhListContent.removeAll();
-            ApiCaller.GetRequest("/retrive_user?FBID=" + AccountIDField.getText())// Pass token to the method
+            ApiCaller.GetRequest("/retrieve_user?FBID=" + AccountIDField.getText())
                     .thenAccept(response -> {
                         Del.setEnabled(true);
 
@@ -120,7 +119,6 @@ public class AccountTab extends JPanel {
                             pharmacyOption itemPanel = new pharmacyOption(Names.getString(i), PHIds.getInt(i));
                             itemPanel.UpdateTheme();
                             PhListContent.add(itemPanel);
-                            PhListContent.add(Box.createVerticalStrut(5));
                         }
                     })
                     .exceptionally(ex -> {
@@ -164,15 +162,15 @@ public class AccountTab extends JPanel {
 
 
         add(FetchAccount, new float[]{0.825f, 0.05f, 0.15f, 0.1f, 35.0f});
-        add(AccountIDL, new float[]{0.025f, 0.05f, 0.075f, 0.1f, 30.0f});
-        add(AccountIDField, new float[]{0.10625f, 0.05f, 0.7f, 0.1f, 30.0f});
+        add(AccountIDL, new float[]{0.025f, 0.05f, 0.875f, 0.1f, 35.0f});
+        add(AccountIDField, new float[]{0.115f, 0.05f, 0.685f, 0.1f, 35.0f});
 
-        add(Name, new float[]{0.075f, 0.25f, 0.4f, 0.1f, 30.0f});
-        add(status, new float[]{0.075f, 0.4f, 0.4f, 0.1f, 30.0f});
-        add(email, new float[]{0.075f, 0.55f, 0.4f, 0.1f, 30.0f});
+        add(Name, new float[]{0.075f, 0.2f, 0.4f, 0.1f, 30.0f});
+        add(status, new float[]{0.075f, 0.35f, 0.4f, 0.1f, 30.0f});
+        add(email, new float[]{0.075f, 0.5f, 0.4f, 0.1f, 30.0f});
 
-        add(PharmaciesL, new float[]{0.575f, 0.25f, 0.4f, 0.1f, 30.0f});
-        add(PhList, new float[]{0.575f, 0.35f, 0.4f, 0.45f, 30.0f});
+        add(PharmaciesL, new float[]{0.575f, 0.2f, 0.4f, 0.1f, 30.0f});
+        add(PhList, new float[]{0.575f, 0.35f, 0.35f, 0.5f, 30.0f});
 
         add(AddNewAccount, new float[]{0.05f, 0.875f, 0.25f, 0.1f, 35.0f});
         add(Del, new float[]{0.375f, 0.875f, 0.25f, 0.1f, 35.0f});
@@ -184,11 +182,10 @@ public class AccountTab extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
-        g.setColor(Color.gray);
+        g.setColor(MainWindow.Tex);
         int mid = this.getWidth() / 2;
-        int YStart = (int) (this.getHeight() * 0.175);
+        int YStart = (int) (this.getHeight() * 0.1825);
         int YEnd = (int) (this.getHeight() * 0.85);
-
         g.drawLine(mid, YStart, mid, YEnd);
     }
 }

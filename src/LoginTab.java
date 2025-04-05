@@ -54,13 +54,13 @@ public class LoginTab extends JPanel {
         Logout.putClientProperty("JButton.buttonType", "roundRect");
         Logout.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
 
-        AdminL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        AdminL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         AdminIDField.putClientProperty("JComponent.roundRect", true);
-        AdminIDField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        AdminIDField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
 
-        PasswordL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        PasswordL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         PasswordField.putClientProperty("JComponent.roundRect", true);
-        PasswordField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        PasswordField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         PasswordField.setEchoChar('#');
 
         Login.addActionListener(e -> {
@@ -72,9 +72,7 @@ public class LoginTab extends JPanel {
 
         });
 
-        Logout.addActionListener(e -> {
-            ApiCaller.Logout();
-        });
+        Logout.addActionListener(e -> ApiCaller.Logout());
 
         showPasswordCheckbox.addActionListener(e -> {
                     if (showPasswordCheckbox.isSelected()) {
@@ -90,10 +88,10 @@ public class LoginTab extends JPanel {
 
         add(Login, new float[]{0.3f, 0.75f, 0.15f, 0.1f, 40.0f});
         add(Logout, new float[]{0.55f, 0.75f, 0.15f, 0.1f, 40.0f});
-        add(AdminL, new float[]{0.1f, 0.2f, 0.6f, 0.15f, 30.0f});
-        add(PasswordL, new float[]{0.1f, 0.45f, 0.6f, 0.15f, 30.0f});
-        add(AdminIDField, new float[]{0.2f, 0.2f, 0.6f, 0.15f, 30.0f});
-        add(PasswordField, new float[]{0.2f, 0.45f, 0.6f, 0.15f, 30.0f});
+        add(AdminL, new float[]{0.1f, 0.2f, 0.6f, 0.15f, 35.0f});
+        add(PasswordL, new float[]{0.1f, 0.45f, 0.6f, 0.15f, 35.0f});
+        add(AdminIDField, new float[]{0.2f, 0.2f, 0.6f, 0.15f, 35.0f});
+        add(PasswordField, new float[]{0.2f, 0.45f, 0.6f, 0.15f, 35.0f});
         add(showPasswordCheckbox, new float[]{0.45f, 0.6f, 0.2f, 0.1f, 25.0f});
         add(theme,new float[]{0.025f, 0.05f, 0.1f, 0.075f, 25.0f});
     }

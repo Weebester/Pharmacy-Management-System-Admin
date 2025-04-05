@@ -9,7 +9,6 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.json.JSONObject;
-
 import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -101,7 +100,10 @@ public class ApiCaller {
                 return responseBody;
 
             } catch (HttpResponseException e) {
-                if (e.getStatusCode() == 456)
+                if(e.getStatusCode() ==401){
+                    Logout();
+                    throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - Session Ended due to invalid or expired token");
+                }else if (e.getStatusCode() == 456)
                     throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - DataEntity Not Found");
                 else {
                     throw new RuntimeException("HTTP Error:" + e.getStatusCode() + " - " + e.getMessage());

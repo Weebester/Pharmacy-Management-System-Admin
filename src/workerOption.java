@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class pharmacyOption extends JPanel {
+public class workerOption extends JPanel {
     JLabel NameL = new JLabel();
     JButton redirect = new JButton("Go");
 
@@ -10,7 +10,7 @@ public class pharmacyOption extends JPanel {
         redirect.setForeground(MainWindow.TexComp);
         NameL.setForeground(MainWindow.Tex);
     }
-    pharmacyOption(String Name, int PHId) {
+    workerOption(String Name, String UID) {
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setBackground(null);
 
@@ -22,9 +22,10 @@ public class pharmacyOption extends JPanel {
         redirect.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
         redirect.addActionListener(
                 e -> {
-                    System.out.println(PHId);
-                    Main.MainW.PharmacyT.triggerFetch(""+PHId);
-                    Main.MainW.SetTab(2);
+                    System.out.println(UID);
+                    Main.MainW.AccountT.triggerFetch(UID);
+                    Main.MainW.SetTab(1);
+
                 });
 
 
