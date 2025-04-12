@@ -12,7 +12,7 @@ public class MainWindow extends JFrame {
     public void SetThemeDark(boolean theme) {
         if (theme) {
             BG = new Color(70, 70, 70);
-            Comp = new Color(0, 200, 180);
+            Comp = new Color(0, 180, 180);
             Comp2 = new Color(240, 0, 70);
             Tex = new Color(238, 238, 238);
         } else {
@@ -24,16 +24,21 @@ public class MainWindow extends JFrame {
         LoginT.UpdateTheme();
         AccountT.UpdateTheme();
         PharmacyT.UpdateTheme();
+        MedT.UpdateTheme();
     }
 
     JTabbedPane Tabs = new JTabbedPane();
     LoginTab LoginT = new LoginTab();
     AccountTab AccountT = new AccountTab();
     PharmacyTab PharmacyT = new PharmacyTab();
+    MedTab MedT = new MedTab();
+    TicketTab TicketT = new TicketTab();
 
     public void SetTabsState(boolean MedAccess, boolean pharmaAccess) {
         Tabs.setEnabledAt(1, pharmaAccess);
         Tabs.setEnabledAt(2,pharmaAccess);
+        Tabs.setEnabledAt(3,MedAccess);
+        Tabs.setEnabledAt(4,(pharmaAccess||MedAccess));
     }
 
     public void SetTab(int index) {
@@ -49,6 +54,8 @@ public class MainWindow extends JFrame {
         Tabs.add("Login", LoginT);
         Tabs.add("Accounts", AccountT);
         Tabs.add("Pharmacies",PharmacyT);
+        Tabs.add("Meds", MedT);
+        Tabs.add("Tickets",TicketT);
         Tabs.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
         //SetTabsState(false, false);
         SetTabsState(true,true);

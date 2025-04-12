@@ -293,6 +293,7 @@ public class PharmacyTab extends JPanel {
         Del.putClientProperty("JButton.buttonType", "roundRect");
         Del.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         Del.addActionListener(e -> {
+            JOptionPane.showConfirmDialog(null,"Are you sure you want to","Delete",JOptionPane.YES_NO_OPTION);
         });
 
         PharmacyIDL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
