@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
@@ -43,25 +42,28 @@ public class RelativeLayout implements LayoutManager2 {
     public void layoutContainer(Container parent) {
         int width = parent.getWidth();
         int height = parent.getHeight();
-        float ScaleF = Math.min(width / (float) PREF_W,height / (float) PREF_H);
+        float ScaleF = Math.min(width / (float) PREF_W, height / (float) PREF_H);
 
 
         for (Component comp : parent.getComponents()) {
             float[] values = constraints.get(comp);
+
             if (values != null) {
                 int x = (int) (values[0] * width);
                 int y = (int) (values[1] * height);
                 int w = (int) (values[2] * width);
                 int h = (int) (values[3] * height);
                 comp.setBounds(x, y, w, h);
+
+                if (comp.getFont() != null) {
+                    Font Old = comp.getFont();
+                    float Nsize = Math.max(MIN_F, Math.min(values[4] * ScaleF, MAX_F));
+                    Font New = Old.deriveFont(Nsize);
+                    comp.setFont(New);
+                }
             }
 
-            if (comp.getFont() != null) {
-                Font Old = comp.getFont();
-                float Nsize = Math.max(MIN_F, Math.min(values[4] * ScaleF, MAX_F));
-                Font New = Old.deriveFont(Nsize);
-                comp.setFont(New);
-            }
+
         }
     }
 

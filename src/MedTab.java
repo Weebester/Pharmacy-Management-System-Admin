@@ -1,20 +1,93 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 
 public class MedTab extends JPanel {
+
+
+    static class TA {
+        int id;
+        String name;
+
+        public TA(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    TA[] Full_TAs_List;
+
+
+
+
+    public void populateTAs() {
+
+        ApiCaller.GetRequest("/TAList").thenAccept(response -> {
+
+            JSONArray TAArray = new JSONArray(response);
+
+            Full_TAs_List = new TA[TAArray.length()];
+            for (int i = 0; i < TAArray.length(); i++) {
+                JSONObject ta = TAArray.getJSONObject(i);
+                Full_TAs_List[i] = new TA(ta.getInt("TA_id"), ta.getString("TA"));
+                TAbox.addItem(Full_TAs_List[i]);
+            }
+
+
+            JTextField editor = (JTextField) TAbox.getEditor().getEditorComponent();
+
+            editor.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    String input = editor.getText();
+                    TAbox.hidePopup();
+                    TAbox.removeAllItems();
+
+                    for (TA ta : Full_TAs_List) {
+                        if (ta.name.toLowerCase().startsWith(input.toLowerCase())) {
+                            TAbox.addItem(ta);
+                        }
+                    }
+
+                    editor.setText(input);
+                    TAbox.showPopup();
+                }
+            });
+
+
+
+        }).exceptionally(ex -> {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        });
+
+
+
+    }
 
     JButton FetchMed = new JButton("Fetch");
     JLabel MedIDL = new JLabel("MedID:");
     JTextField MedIDField = new JTextField("");
+
     JLabel MedName = new JLabel("MedName: Null");
     JLabel Manufacturer = new JLabel("Manufacturer: Null");
     JLabel Country = new JLabel("Country: Null");
-    JLabel MedImage=new JLabel();
+    JLabel POM = new JLabel("POM: Null");
+    JLabel Brand = new JLabel("Brand: Null");
+    JLabel MedImage = new JLabel();
+    JComboBox<TA> TAbox=new JComboBox<>();;
 
 
     public void UpdateTheme() {
@@ -25,6 +98,11 @@ public class MedTab extends JPanel {
         MedName.setForeground(MainWindow.Tex);
         Manufacturer.setForeground(MainWindow.Tex);
         Country.setForeground(MainWindow.Tex);
+        POM.setForeground(MainWindow.Tex);
+        Brand.setForeground(MainWindow.Tex);
+        MedImage.setBorder(BorderFactory.createLineBorder(MainWindow.Comp, 7));
+
+
 
         /*
         workerList.setBackground(MainWindow.BG);
@@ -139,15 +217,39 @@ public class MedTab extends JPanel {
     }
 
 
-    MedTab(){
+    MedTab() {
 
 
         setLayout(new RelativeLayout());
+
+        populateTAs();
+
+        TAbox.putClientProperty("JComponent.roundRect", true);
+        TAbox.setEditable(true);
+        TAbox.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
 
 
         FetchMed.putClientProperty("JButton.buttonType", "roundRect");
         FetchMed.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         FetchMed.addActionListener(e -> {
+            ApiCaller.GetRequest("/MedDetails?med_id=" + MedIDField.getText()).thenAccept(response -> {
+
+                JSONObject jsonObject = new JSONObject(response);
+                MedName.setText("MedName: " + jsonObject.optString("Med"));
+                Manufacturer.setText("Manufacturer: " + jsonObject.optString("manufacturer"));
+                Country.setText("Country: " + jsonObject.optString("country"));
+
+                loadImageAsync(ApiCaller.serverAddress + "/MedIMG?ImageId=" + MedIDField.getText());
+
+            }).exceptionally(ex -> {
+                MedName.setText("MedName: Null");
+                Manufacturer.setText("Manufacturer: Null");
+                Country.setText("Country: Null");
+                loadPlaceHolder();
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return null;
+            });
+
         });
 
         MedIDL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
@@ -157,15 +259,21 @@ public class MedTab extends JPanel {
         MedName.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
         Manufacturer.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
         Country.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        POM.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        Brand.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
 
         add(FetchMed, new float[]{0.825f, 0.05f, 0.15f, 0.1f, 35.0f});
         add(MedIDL, new float[]{0.0225f, 0.05f, 0.1075f, 0.1f, 35.0f});
         add(MedIDField, new float[]{0.08f, 0.05f, 0.72f, 0.1f, 35.0f});
 
-        add(MedImage,new float[]{0.075f, 0.2f, 0.2f, 0.3f, 30.0f});
-        add(MedName, new float[]{0.075f, 0.55f, 0.4f, 0.1f, 30.0f});
-        add(Manufacturer, new float[]{0.075f, 0.65f, 0.4f, 0.1f, 30.0f});
-        add(Country, new float[]{0.075f, 0.75f, 0.4f, 0.1f, 30.0f});
+        add(MedImage, new float[]{0.075f, 0.175f, 0.2f, 0.35f, 30.0f});
+        add(MedName, new float[]{0.075f, 0.535f, 0.4f, 0.05f, 30.0f});
+        add(Manufacturer, new float[]{0.075f, 0.585f, 0.4f, 0.05f, 30.0f});
+        add(Country, new float[]{0.075f, 0.635f, 0.4f, 0.05f, 30.0f});
+        add(POM, new float[]{0.075f, 0.685f, 0.4f, 0.05f, 30.0f});
+        add(Brand, new float[]{0.075f, 0.735f, 0.4f, 0.05f, 30.0f});
+        add(TAbox, new float[]{0.075f, 0.835f, 0.4f, 0.05f, 30.0f});
+
 
 
         loadPlaceHolder();
@@ -205,8 +313,9 @@ public class MedTab extends JPanel {
         new SwingWorker<BufferedImage, Void>() {
             @Override
             protected BufferedImage doInBackground() throws Exception {
-                return ImageIO.read(new URL(urlString));
+                return ImageIO.read(URI.create(urlString).toURL());
             }
+
             @Override
             protected void done() {
                 try {

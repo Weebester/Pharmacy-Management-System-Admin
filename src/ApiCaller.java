@@ -1,4 +1,3 @@
-
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;

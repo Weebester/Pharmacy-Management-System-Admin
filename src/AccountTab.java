@@ -1,6 +1,5 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
@@ -11,7 +10,6 @@ public class AccountTab extends JPanel {
     JButton Del = new JButton("Delete");
     JButton AddBranch = new JButton("Add Branch");
     JButton AddNewAccount = new JButton("Add Account");
-
     JLabel PharmaciesL = new JLabel("Pharmacies:");
     JPanel PhListContent = new JPanel();
     JScrollPane PhList = new JScrollPane(PhListContent);
