@@ -2,6 +2,9 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+!**/src/test/**/apacheHttp/
+!**/src/test/**/flatlaf-3.5.4.jar
+!**/src/test/**/json-20250107.jar
 
 ### Eclipse ###
 .apt_generated
