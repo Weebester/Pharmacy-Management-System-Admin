@@ -1,5 +1,6 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
@@ -40,37 +41,35 @@ public class AccountTab extends JPanel {
         status.setForeground(MainWindow.Tex);
         email.setForeground(MainWindow.Tex);
 
-        PhList.getVerticalScrollBar().setUI(
-                new BasicScrollBarUI() {
+        PhList.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
 
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+                return new JButton() {
                     @Override
-                    protected JButton createDecreaseButton(int orientation) {
-                        return new JButton() {
-                            @Override
-                            public Dimension getPreferredSize() {
-                                return new Dimension(0, 0);
-                            }
-                        };
+                    public Dimension getPreferredSize() {
+                        return new Dimension(0, 0);
                     }
+                };
+            }
 
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+                return new JButton() {
                     @Override
-                    protected JButton createIncreaseButton(int orientation) {
-                        return new JButton() {
-                            @Override
-                            public Dimension getPreferredSize() {
-                                return new Dimension(0, 0);
-                            }
-                        };
+                    public Dimension getPreferredSize() {
+                        return new Dimension(0, 0);
                     }
+                };
+            }
 
-                    @Override
-                    protected void configureScrollBarColors() {
-                        thumbColor = MainWindow.Comp;
-                        trackColor = MainWindow.BG;
-                        thumbHighlightColor = new Color(0, 100, 100);
-                    }
-                }
-        );
+            @Override
+            protected void configureScrollBarColors() {
+                thumbColor = MainWindow.Comp;
+                trackColor = MainWindow.BG;
+                thumbHighlightColor = new Color(0, 100, 100);
+            }
+        });
 
         for (Component X : PhListContent.getComponents()) if (X instanceof pharmacyOption temp) temp.UpdateTheme();
 
@@ -93,41 +92,41 @@ public class AccountTab extends JPanel {
         FetchAccount.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         FetchAccount.addActionListener(e -> {
             PhListContent.removeAll();
-            ApiCaller.GetRequest("/retrieve_user?FBID=" + AccountIDField.getText())
-                    .thenAccept(response -> {
-                        Del.setEnabled(true);
+            ApiCaller.GetRequest("/retrieve_user?UID=" + AccountIDField.getText()).thenAccept(response -> {
+                Del.setEnabled(true);
 
-                        JSONObject jsonObject = new JSONObject(response);
-                        Name.setText("Name: " + jsonObject.optString("user"));
-                        String M = jsonObject.optString("Manager");
-                        System.out.println(M.equals("Yes"));
-                        if (M.equals("Yes")) {
-                            status.setText("Status: Manager");
-                            AddBranch.setEnabled(true);
-                        } else {
-                            status.setText("Status: Assistant");
-                            AddBranch.setEnabled(false);
-                        }
-                        email.setText("Email: " + jsonObject.optString("email"));
+                JSONObject jsonObject = new JSONObject(response);
+                Name.setText("Name: " + jsonObject.optString("user"));
+                String M = jsonObject.optString("Manager");
+                System.out.println(M.equals("Yes"));
+                if (M.equals("Yes")) {
+                    status.setText("Status: Manager");
+                    AddBranch.setEnabled(true);
+                } else {
+                    status.setText("Status: Assistant");
+                    AddBranch.setEnabled(false);
+                }
+                email.setText("Email: " + jsonObject.optString("email"));
 
-                        JSONArray Names = jsonObject.getJSONArray("pharmaciesN");
-                        JSONArray PHIds = jsonObject.getJSONArray("pharmaciesID");
+                if (!jsonObject.isNull("pharmaciesN")) {
+                    JSONArray Names = jsonObject.getJSONArray("pharmaciesN");
+                    JSONArray PHIds = jsonObject.getJSONArray("pharmaciesID");
 
-                        for (int i = 0; i < Names.length(); i++) {
-                            pharmacyOption itemPanel = new pharmacyOption(Names.getString(i), PHIds.getInt(i));
-                            itemPanel.UpdateTheme();
-                            PhListContent.add(itemPanel);
-                        }
-                    })
-                    .exceptionally(ex -> {
-                        Name.setText("Name: Null");
-                        status.setText("Status: Null");
-                        email.setText("Email: Null");
-                        AddBranch.setEnabled(false);
-                        Del.setEnabled(false);
-                        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                        return null;
-                    });
+                    for (int i = 0; i < Names.length(); i++) {
+                        pharmacyOption itemPanel = new pharmacyOption(Names.getString(i), PHIds.getInt(i));
+                        itemPanel.UpdateTheme();
+                        PhListContent.add(itemPanel);
+                    }
+                }
+            }).exceptionally(ex -> {
+                Name.setText("Name: Null");
+                status.setText("Status: Null");
+                email.setText("Email: Null");
+                AddBranch.setEnabled(false);
+                Del.setEnabled(false);
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return null;
+            });
 
         });
 
@@ -140,6 +139,21 @@ public class AccountTab extends JPanel {
         Del.putClientProperty("JButton.buttonType", "roundRect");
         Del.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         Del.addActionListener(e -> {
+            int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this account?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+
+            if (choice == JOptionPane.YES_OPTION) {
+                ApiCaller.DeleteRequest("/delete_user?UID=" + AccountIDField.getText()).thenAccept(response -> {
+                    JOptionPane.showMessageDialog(null, response, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    Name.setText("Name: Null");
+                    status.setText("Status: Null");
+                    email.setText("Email: Null");
+                    AddBranch.setEnabled(false);
+                    Del.setEnabled(false);
+                }).exceptionally(ex -> {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                });
+            }
         });
 
         AddBranch.setEnabled(false);

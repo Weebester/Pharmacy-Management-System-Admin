@@ -192,16 +192,21 @@ public class MedTab extends JPanel {
 
                 loadImageAsync(ApiCaller.serverAddress + "/MedIMG?ImageId=" + MedIDField.getText());
 
-                JSONArray tas=jsonObject.getJSONArray("TAs");
-                JSONArray tasIds=jsonObject.getJSONArray("TA_ids");
-                JSONArray con=jsonObject.getJSONArray("concentrations");
-                JSONArray unit=jsonObject.getJSONArray("units");
+                if (!jsonObject.isNull("TAs")) {
+                    JSONArray tas = jsonObject.getJSONArray("TAs");
+                    JSONArray tasIds = jsonObject.getJSONArray("TA_ids");
+                    JSONArray con = jsonObject.getJSONArray("concentrations");
+                    JSONArray unit = jsonObject.getJSONArray("units");
 
-                for (int i =0 ;i<tas.length();i++){
-                    TaOption itemPanel;
-                    itemPanel = new TaOption(tas.getString(i)+":"+con.getString(i)+unit.getString(i),jsonObject.getInt("Med_id"),tasIds.getInt(i));
-                    itemPanel.UpdateTheme();
-                    MedTAListContent.add(itemPanel);
+                    for (int i = 0; i < tas.length(); i++) {
+                        TaOption itemPanel = new TaOption(
+                                tas.getString(i) + ":" + con.getString(i) + unit.getString(i),
+                                jsonObject.getInt("Med_id"),
+                                tasIds.getInt(i)
+                        );
+                        itemPanel.UpdateTheme();
+                        MedTAListContent.add(itemPanel);
+                    }
                 }
 
             }).exceptionally(ex -> {

@@ -1,6 +1,8 @@
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -8,6 +10,8 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.json.JSONObject;
+
+import java.net.URI;
 import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -99,10 +103,10 @@ public class ApiCaller {
                 return responseBody;
 
             } catch (HttpResponseException e) {
-                if(e.getStatusCode() ==401){
+                if (e.getStatusCode() == 401) {
                     Logout();
                     throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - Session Ended due to invalid or expired token");
-                }else if (e.getStatusCode() == 456)
+                } else if (e.getStatusCode() == 456)
                     throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - DataEntity Not Found");
                 else {
                     throw new RuntimeException("HTTP Error:" + e.getStatusCode() + " - " + e.getMessage());
@@ -113,5 +117,76 @@ public class ApiCaller {
         }, executorService);
     }
 
+    public static CompletableFuture<String> PostRequest(String route, JSONObject body) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        return CompletableFuture.supplyAsync(() -> {
+            try (CloseableHttpClient client = HttpClients.createDefault()) {
+
+                HttpPost request = new HttpPost(serverAddress + route);
+
+                request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+                request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+                request.setEntity(new StringEntity(body.toString(), "UTF-8"));
+
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+
+                String responseBody = client.execute(request, responseHandler);
+                if (responseBody == null) {
+                    throw new Exception("Received an empty response from the server.");
+                }
+
+                return responseBody;
+
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == 401) {
+                    Logout();
+                    throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - Session Ended due to invalid or expired token");
+                } else if (e.getStatusCode() == 456)
+                    throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - DataEntity Not Found");
+                else if (e.getStatusCode() == 409)
+                    throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - failed to complete operation");
+                else {
+                    throw new RuntimeException("HTTP Error:" + e.getStatusCode() + " - " + e.getMessage());
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("UnExpected Error: " + e.getMessage(), e);
+            }
+        }, executorService);
+    }
+
+    public static CompletableFuture<String> DeleteRequest(String route) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        return CompletableFuture.supplyAsync(() -> {
+            try (CloseableHttpClient client = HttpClients.createDefault()) {
+
+                HttpDelete request = new HttpDelete(serverAddress + route);
+
+                request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+
+                String responseBody = client.execute(request, responseHandler);
+                if (responseBody == null) {
+                    throw new Exception("Received an empty response from the server.");
+                }
+
+                return responseBody;
+
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == 401) {
+                    Logout();
+                    throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - Session Ended due to invalid or expired token");
+                } else if (e.getStatusCode() == 456)
+                    throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - DataEntity Not Found");
+                else if (e.getStatusCode() == 409)
+                    throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - Failed to complete  operation");
+                else {
+                    throw new RuntimeException("HTTP Error:" + e.getStatusCode() + " - " + e.getMessage());
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("UnExpected Error: " + e.getMessage(), e);
+            }
+        }, executorService);
+    }
 
 }
