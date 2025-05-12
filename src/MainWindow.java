@@ -25,6 +25,7 @@ public class MainWindow extends JFrame {
         AccountT.UpdateTheme();
         PharmacyT.UpdateTheme();
         MedT.UpdateTheme();
+        TicketT.updateTheme();
     }
 
     JTabbedPane Tabs = new JTabbedPane();

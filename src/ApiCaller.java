@@ -2,7 +2,6 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -10,8 +9,6 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.json.JSONObject;
-
-import java.net.URI;
 import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -54,6 +51,7 @@ public class ApiCaller {
             boolean pharmaAccess = payload.optString("PharmaAccess", "No").equals("Yes");
 
             Main.MainW.SetTabsState(medAccess, pharmaAccess);
+            Main.MainW.TicketT.load_next_Page();
 
             System.out.println("Token: " + token);
             System.out.println("Med Access: " + medAccess);
