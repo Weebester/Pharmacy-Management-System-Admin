@@ -151,6 +151,10 @@ public class MedTab extends JPanel {
 
     }
 
+    public void triggerFetch(String MedID) {
+        MedIDField.setText(MedID);
+        FetchMed.doClick();
+    }
 
     MedTab() {
 

@@ -92,7 +92,7 @@ public class AccountTab extends JPanel {
         FetchAccount.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         FetchAccount.addActionListener(e -> {
             PhListContent.removeAll();
-            ApiCaller.GetRequest("/retrieve_user?UID=" + AccountIDField.getText()).thenAccept(response -> {
+            ApiCaller.GetRequest("/retrieve_user?FB_ID=" + AccountIDField.getText()).thenAccept(response -> {
                 Del.setEnabled(true);
 
                 JSONObject jsonObject = new JSONObject(response);
@@ -142,7 +142,7 @@ public class AccountTab extends JPanel {
             int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this account?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 
             if (choice == JOptionPane.YES_OPTION) {
-                ApiCaller.DeleteRequest("/delete_user?UID=" + AccountIDField.getText()).thenAccept(response -> {
+                ApiCaller.DeleteRequest("/delete_user?FB_ID=" + AccountIDField.getText()).thenAccept(response -> {
                     JOptionPane.showMessageDialog(null, response, "Success", JOptionPane.INFORMATION_MESSAGE);
                     Name.setText("Name: Null");
                     status.setText("Status: Null");

@@ -135,16 +135,22 @@ public class Ticket extends JPanel {
         gotoAC.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 80));
         gotoAC.addActionListener(e -> {
             System.out.println(AccountId);
+            Main.MainW.AccountT.triggerFetch(AccountId);
+            Main.MainW.SetTab(1);
         });
         gotoPH.putClientProperty("JButton.buttonType", "roundRect");
         gotoPH.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 80));
         gotoPH.addActionListener(e -> {
             System.out.println(PharmacyId);
+            Main.MainW.PharmacyT.triggerFetch(""+PharmacyId);
+            Main.MainW.SetTab(2);
         });
         gotoMed.putClientProperty("JButton.buttonType", "roundRect");
         gotoMed.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 80));
         gotoMed.addActionListener(e -> {
             System.out.println(MedId);
+            Main.MainW.MedT.triggerFetch(""+MedId);
+            Main.MainW.SetTab(3);
         });
 
         respond.putClientProperty("JButton.buttonType", "roundRect");
@@ -161,8 +167,10 @@ public class Ticket extends JPanel {
 
         add(contentArea,new float[]{0.1f, 0.05f, 0.8f, 0.5f, 15.0f});
         add(gotoAC,new float[]{0.1f, 0.60f, 0.8f, 0.075f, 80.0f});
-        add(gotoPH,new float[]{0.1f, 0.7f, 0.8f, 0.075f, 80.0f});
-        add(gotoMed,new float[]{0.1f, 0.8f, 0.8f, 0.075f, 80.0f});
+        if (PharmacyId!=0)
+            add(gotoPH,new float[]{0.1f, 0.7f, 0.8f, 0.075f, 80.0f});
+        if (MedId!=0)
+            add(gotoMed,new float[]{0.1f, 0.8f, 0.8f, 0.075f, 80.0f});
         add(respond,new float[]{0.1f, 0.9f, 0.375f, 0.075f, 80.0f});
         add(discard,new float[]{0.525f, 0.9f, 0.375f, 0.075f, 80.0f});
 
