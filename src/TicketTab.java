@@ -28,13 +28,13 @@ public class TicketTab extends JPanel {
 
 
                 JSONObject Obj = Temp.getJSONObject(0);
-                Current[0] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"));
+                Current[0] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
                 add(Current[0], new float[]{0.05f, 0.05f, 0.2f, 0.9f, 30.0f});
                 cursorPrev = Obj.get("TK_id").toString();
 
                 if (1 < Temp.length()) {
                     Obj = Temp.getJSONObject(1);
-                    Current[1] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"));
+                    Current[1] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
                     add(Current[1], new float[]{0.275f, 0.05f, 0.2f, 0.9f, 30.0f});
                 } else {
                     Current[1] = null;
@@ -42,7 +42,7 @@ public class TicketTab extends JPanel {
 
                 if (2 < Temp.length()) {
                     Obj = Temp.getJSONObject(2);
-                    Current[2] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"));
+                    Current[2] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
                     add(Current[2], new float[]{0.5f, 0.05f, 0.2f, 0.9f, 30.0f});
                 } else {
                     Current[2] = null;
@@ -50,7 +50,7 @@ public class TicketTab extends JPanel {
 
                 if (3 < Temp.length()) {
                     Obj = Temp.getJSONObject(3);
-                    Current[3] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"));
+                    Current[3] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
                     add(Current[3], new float[]{0.725f, 0.05f, 0.2f, 0.9f, 30.0f});
                     cursorNext = Obj.get("TK_id").toString();
                 } else {
@@ -80,13 +80,13 @@ public class TicketTab extends JPanel {
                 repaint();
 
                 JSONObject Obj = Temp.getJSONObject(0);
-                Current[3] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"));
+                Current[3] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
                 add(Current[3], new float[]{0.725f, 0.05f, 0.2f, 0.9f, 30.0f});
                 cursorNext = Obj.get("TK_id").toString();
 
                 if (1 < Temp.length()) {
                     Obj = Temp.getJSONObject(1);
-                    Current[2] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"));
+                    Current[2] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
                     add(Current[2], new float[]{0.5f, 0.05f, 0.2f, 0.9f, 30.0f});
                 } else {
                     Current[2] = null;
@@ -94,7 +94,7 @@ public class TicketTab extends JPanel {
 
                 if (2 < Temp.length()) {
                     Obj = Temp.getJSONObject(2);
-                    Current[1] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"));
+                    Current[1] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
                     add(Current[1], new float[]{0.275f, 0.05f, 0.2f, 0.9f, 30.0f});
                 } else {
                     Current[1] = null;
@@ -102,7 +102,7 @@ public class TicketTab extends JPanel {
 
                 if (3 < Temp.length()) {
                     Obj = Temp.getJSONObject(3);
-                    Current[0] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"));
+                    Current[0] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
                     add(Current[0], new float[]{0.05f, 0.05f, 0.2f, 0.9f, 30.0f});
                     cursorPrev = Obj.get("TK_id").toString();
                 } else {
@@ -119,6 +119,59 @@ public class TicketTab extends JPanel {
         });
     }
 
+
+    void refresh_Page() {
+        ApiCaller.GetRequest("/tickets_refresh?cursor=" + cursorPrev + "&limit=4").thenAccept(response -> {
+
+
+            JSONArray Temp = new JSONArray(response);
+
+            if (!Temp.isEmpty()) {
+                for (Ticket X : Current) if (X != null) remove(X);
+                revalidate();
+                repaint();
+
+
+                JSONObject Obj = Temp.getJSONObject(0);
+                Current[0] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
+                add(Current[0], new float[]{0.05f, 0.05f, 0.2f, 0.9f, 30.0f});
+                cursorPrev = Obj.get("TK_id").toString();
+
+                if (1 < Temp.length()) {
+                    Obj = Temp.getJSONObject(1);
+                    Current[1] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
+                    add(Current[1], new float[]{0.275f, 0.05f, 0.2f, 0.9f, 30.0f});
+                } else {
+                    Current[1] = null;
+                }
+
+                if (2 < Temp.length()) {
+                    Obj = Temp.getJSONObject(2);
+                    Current[2] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
+                    add(Current[2], new float[]{0.5f, 0.05f, 0.2f, 0.9f, 30.0f});
+                } else {
+                    Current[2] = null;
+                }
+
+                if (3 < Temp.length()) {
+                    Obj = Temp.getJSONObject(3);
+                    Current[3] = new Ticket(Obj.getString("Content"), Obj.getString("Account"), Obj.getInt("Pharmacy"), Obj.getInt("Med"),Obj.get("TK_id").toString());
+                    add(Current[3], new float[]{0.725f, 0.05f, 0.2f, 0.9f, 30.0f});
+                    cursorNext = Obj.get("TK_id").toString();
+                } else {
+                    Current[3] = null;
+                }
+                revalidate();
+                repaint();
+
+
+            }
+
+        }).exceptionally(ex -> {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        });
+    }
 
     void updateTheme() {
         setBackground(MainWindow.BG);

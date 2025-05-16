@@ -231,8 +231,29 @@ public class MedTab extends JPanel {
 
         addTA.putClientProperty("JButton.buttonType", "roundRect");
         addTA.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
+        addTA.setEnabled(false);
         addTA.addActionListener(e -> {
+            int choice = JOptionPane.showConfirmDialog(null, "Are you sure you want to add this Ta to dosage?", "Confirm", JOptionPane.YES_NO_OPTION);
 
+            if (choice == JOptionPane.YES_OPTION) {
+                JSONObject body = new JSONObject();
+                body.put("MedID", MedIDField.getText());
+                TA ta = (TA) TA_Box.getSelectedItem();
+                assert ta != null;
+                body.put("TaID", ta.id);
+                String unit = (String) Unit.getSelectedItem();
+                body.put("unit", unit);
+                body.put("concetration", Dose.getText());
+
+                ApiCaller.PostRequest("/dosage_add", body).thenAccept(response -> {
+                    JOptionPane.showMessageDialog(null, response, "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                }).exceptionally(ex -> {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                });
+                triggerFetch(MedIDField.getText());
+            }
         });
 
 

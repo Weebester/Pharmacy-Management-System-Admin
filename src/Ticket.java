@@ -1,4 +1,5 @@
 import com.formdev.flatlaf.ui.FlatBorder;
+import org.json.JSONObject;
 
 import javax.swing.*;
 
@@ -112,7 +113,7 @@ public class Ticket extends JPanel {
 
     }
 
-    public Ticket(String content, String AccountId, int PharmacyId, int MedId) {
+    public Ticket(String content, String AccountId, int PharmacyId, int MedId,String TicketID) {
         setLayout(new RelativeLayout());
 
         TContent = new JTextPane() {
@@ -156,12 +157,30 @@ public class Ticket extends JPanel {
         respond.putClientProperty("JButton.buttonType", "roundRect");
         respond.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 80));
         respond.addActionListener(e -> {
-            System.out.println("respond");
+            JDialog dialog = new JDialog((Frame) null, "RespondForm", true);
+            dialog.setContentPane(new TicketRespondForm(AccountId,TicketID));
+            dialog.setSize(900, 500);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+
         });
         discard.putClientProperty("JButton.buttonType", "roundRect");
         discard.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 80));
         discard.addActionListener(e -> {
-            System.out.println("discard");
+            int choice =  JOptionPane.showConfirmDialog(null,"Are you sure you want to","Delete",JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                JSONObject body = new JSONObject();
+                body.put("TK_id", TicketID);
+
+                ApiCaller.PutRequest("/ticket_discard", body).thenAccept(response -> {
+                    JOptionPane.showMessageDialog(this, response, "Ticket Discarded", JOptionPane.INFORMATION_MESSAGE);
+                    Main.MainW.TicketT.refresh_Page();
+                }).exceptionally(ex -> {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "error", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                });
+            }
         });
 
 

@@ -292,7 +292,19 @@ public class PharmacyTab extends JPanel {
         Del.putClientProperty("JButton.buttonType", "roundRect");
         Del.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         Del.addActionListener(e -> {
-            JOptionPane.showConfirmDialog(null,"Are you sure you want to","Delete",JOptionPane.YES_NO_OPTION);
+            int choice =  JOptionPane.showConfirmDialog(null,"Are you sure you want to","Delete",JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                ApiCaller.DeleteRequest("/delete_pharma?ID=" + PharmacyIDField.getText()).thenAccept(response -> {
+                    JOptionPane.showMessageDialog(null, response, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    Name.setText("PharmacyName: Null");
+                    workerListContent.removeAll();
+                    LogsContent.setText("");
+                    Del.setEnabled(false);
+                }).exceptionally(ex -> {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                });
+            }
         });
 
         PharmacyIDL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
