@@ -7,6 +7,7 @@ import java.awt.*;
 public class PharmacyTab extends JPanel {
 
     JButton Del = new JButton("Delete");
+    JButton AddAssist = new JButton("Add Assistant");
     JButton FetchPharmacy = new JButton("Fetch");
     JButton InspectUpdates = new JButton("InspectUpdates");
     JButton InspectSells = new JButton("InspectSells");
@@ -44,6 +45,8 @@ public class PharmacyTab extends JPanel {
         ToL.setForeground(MainWindow.Tex);
         Del.setBackground(MainWindow.Comp2);
         Del.setForeground(MainWindow.TexComp);
+        AddAssist.setBackground(MainWindow.Comp);
+        AddAssist.setForeground(MainWindow.TexComp);
 
         workerList.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
 
@@ -162,6 +165,7 @@ public class PharmacyTab extends JPanel {
             LogsContent.setText("");
             ApiCaller.GetRequest("/retrieve_pharma?PhID=" + PharmacyIDField.getText()).thenAccept(response -> {
                 Del.setEnabled(true);
+                AddAssist.setEnabled(true);
                 InspectSells.setEnabled(true);
                 InspectUpdates.setEnabled(true);
                 JSONObject jsonObject = new JSONObject(response);
@@ -188,6 +192,7 @@ public class PharmacyTab extends JPanel {
                 InspectUpdates.setEnabled(false);
                 InspectSells.setEnabled(false);
                 Del.setEnabled(false);
+                AddAssist.setEnabled(false);
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 return null;
             });
@@ -300,11 +305,25 @@ public class PharmacyTab extends JPanel {
                     workerListContent.removeAll();
                     LogsContent.setText("");
                     Del.setEnabled(false);
+                    AddAssist.setEnabled(false);
                 }).exceptionally(ex -> {
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     return null;
                 });
             }
+        });
+
+
+        AddAssist.setEnabled(false);
+        AddAssist.putClientProperty("JButton.buttonType", "roundRect");
+        AddAssist.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
+        AddAssist.addActionListener(e -> {
+            JDialog dialog = new JDialog((Frame) null, "AddAssistantForm", true);
+            dialog.setContentPane(new AddAssistantForm(PharmacyIDField.getText()));
+            dialog.setSize(900, 500);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
         });
 
         PharmacyIDL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
@@ -335,7 +354,9 @@ public class PharmacyTab extends JPanel {
 
         add(InspectUpdates, new float[]{0.525f, 0.3f, 0.2125f, 0.075f, 30.0f});
         add(InspectSells, new float[]{0.775f, 0.3f, 0.2125f, 0.075f, 30.0f});
-        add(Del, new float[]{0.075f, 0.875f, 0.35f, 0.1f, 30.0f});
+        add(Del, new float[]{0.035f, 0.875f, 0.2f, 0.1f, 30.0f});
+        add(AddAssist, new float[]{0.27f, 0.875f, 0.2f, 0.1f, 30.0f});
+
 
         add(workerList, new float[]{0.075f, 0.4f, 0.35f, 0.45f, 30.0f});
         add(LogsArea, new float[]{0.525f, 0.4f, 0.45f, 0.55f, 30.0f});

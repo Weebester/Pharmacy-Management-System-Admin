@@ -63,17 +63,6 @@ public class LoginTab extends JPanel {
         PasswordField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         PasswordField.setEchoChar('#');
 
-        Login.addActionListener(e -> {
-            try {
-                ApiCaller.Login(AdminIDField.getText(), String.copyValueOf(PasswordField.getPassword()));
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-
-        });
-
-        Logout.addActionListener(e -> ApiCaller.Logout());
-
         showPasswordCheckbox.addActionListener(e -> {
                     if (showPasswordCheckbox.isSelected()) {
                         PasswordField.setEchoChar((char) 0); // Show password
@@ -84,6 +73,17 @@ public class LoginTab extends JPanel {
         );
 
         showPasswordCheckbox.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+
+        Login.addActionListener(e -> {
+            try {
+                ApiCaller.Login(AdminIDField.getText(), String.copyValueOf(PasswordField.getPassword()));
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        });
+
+        Logout.addActionListener(e -> ApiCaller.Logout());
 
 
         add(Login, new float[]{0.3f, 0.75f, 0.15f, 0.1f, 40.0f});

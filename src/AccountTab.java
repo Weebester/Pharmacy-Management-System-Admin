@@ -10,7 +10,7 @@ public class AccountTab extends JPanel {
 
     JButton Del = new JButton("Delete");
     JButton AddBranch = new JButton("Add Branch");
-    JButton AddNewAccount = new JButton("Add Account");
+    JButton AddNewAccount = new JButton("Add new Manger");
     JLabel PharmaciesL = new JLabel("Pharmacies:");
     JPanel PhListContent = new JPanel();
     JScrollPane PhList = new JScrollPane(PhListContent);
@@ -133,6 +133,12 @@ public class AccountTab extends JPanel {
         AddNewAccount.putClientProperty("JButton.buttonType", "roundRect");
         AddNewAccount.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         AddNewAccount.addActionListener(e -> {
+            JDialog dialog = new JDialog((Frame) null, "AddManagerForm", true);
+            dialog.setContentPane(new AddManagerForm());
+            dialog.setSize(900, 500);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
         });
 
         Del.setEnabled(false);
@@ -160,7 +166,23 @@ public class AccountTab extends JPanel {
         AddBranch.putClientProperty("JButton.buttonType", "roundRect");
         AddBranch.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         AddBranch.addActionListener(e -> {
+            String branchName = JOptionPane.showInputDialog(this, "Enter New Branch Name:");
+
+            if (branchName != null && !branchName.trim().isEmpty()) {
+                JSONObject body = new JSONObject();
+                body.put("FB_id", AccountIDField.getText()); // You should already have the current user's Firebase ID
+                body.put("ph_name", branchName);
+
+                ApiCaller.PostRequest("/add_branch", body).thenAccept(response -> {
+                    JOptionPane.showMessageDialog(this, response, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    triggerFetch(AccountIDField.getText());
+                }).exceptionally(ex -> {
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                });
+            }
         });
+
 
 
         AccountIDL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
