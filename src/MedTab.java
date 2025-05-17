@@ -3,6 +3,7 @@ import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -14,71 +15,16 @@ import java.net.URI;
 public class MedTab extends JPanel {
 
 
-    static class TA {
-        int id;
-        String name;
-
-        public TA(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
-
-    TA[] Full_TAs_List;
 
 
-    public void populateTAs() {
-
-        ApiCaller.GetRequest("/TAList").thenAccept(response -> {
-
-            JSONArray TAArray = new JSONArray(response);
-
-            Full_TAs_List = new TA[TAArray.length()];
-            for (int i = 0; i < TAArray.length(); i++) {
-                JSONObject ta = TAArray.getJSONObject(i);
-                Full_TAs_List[i] = new TA(ta.getInt("TA_id"), ta.getString("TA"));
-                TA_Box.addItem(Full_TAs_List[i]);
-            }
-
-
-            JTextField editor = (JTextField) TA_Box.getEditor().getEditorComponent();
-
-            editor.addKeyListener(new KeyAdapter() {
-                @Override
-                public void keyReleased(KeyEvent e) {
-                    String input = editor.getText();
-                    TA_Box.hidePopup();
-                    TA_Box.removeAllItems();
-
-                    for (TA ta : Full_TAs_List) {
-                        if (ta.name.toLowerCase().startsWith(input.toLowerCase())) {
-                            TA_Box.addItem(ta);
-                        }
-                    }
-
-                    editor.setText(input);
-                    TA_Box.showPopup();
-                }
-            });
-
-
-        }).exceptionally(ex -> {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return null;
-        });
-
-
-    }
-
+    JButton AddMed = new JButton("Add New Med");
+    JButton ChangeState = new JButton("Change State");
+    JButton ChangePic = new JButton("Change Picture");
     JButton FetchMed = new JButton("Fetch");
     JLabel MedIDL = new JLabel("MedID:");
     JTextField MedIDField = new JTextField("");
     JLabel MedName = new JLabel("MedName: Null");
+    JLabel DosageForm = new JLabel("DosageForm: Null");
     JLabel Manufacturer = new JLabel("Manufacturer: Null");
     JLabel Country = new JLabel("Country: Null");
     JLabel POM = new JLabel("POM: Null");
@@ -108,12 +54,19 @@ public class MedTab extends JPanel {
         TasL.setForeground(MainWindow.Tex);
         DoseL.setForeground(MainWindow.Tex);
         MedName.setForeground(MainWindow.Tex);
+        DosageForm.setForeground(MainWindow.Tex);
         Manufacturer.setForeground(MainWindow.Tex);
         Country.setForeground(MainWindow.Tex);
         POM.setForeground(MainWindow.Tex);
         Brand.setForeground(MainWindow.Tex);
         Obsolete.setForeground(MainWindow.Tex);
         MedImage.setBorder(BorderFactory.createLineBorder(MainWindow.Comp, 7));
+        AddMed.setBackground(MainWindow.Comp);
+        AddMed.setForeground(MainWindow.TexComp);
+        ChangeState.setBackground(MainWindow.Comp);
+        ChangeState.setForeground(MainWindow.TexComp);
+        ChangePic.setBackground(MainWindow.Comp);
+        ChangePic.setForeground(MainWindow.TexComp);
 
         MedTAList.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
 
@@ -187,12 +140,15 @@ public class MedTab extends JPanel {
 
                 JSONObject jsonObject = new JSONObject(response);
                 MedName.setText("MedName: " + jsonObject.optString("Med"));
+                DosageForm.setText("DosageForm: " + jsonObject.optString("Form"));
                 Manufacturer.setText("Manufacturer: " + jsonObject.optString("manufacturer"));
                 Country.setText("Country: " + jsonObject.optString("country"));
                 POM.setText("POM: " + jsonObject.optString("POM"));
                 Brand.setText("Brand: " + jsonObject.optString("Brand"));
                 Obsolete.setText("Obsolete: " + jsonObject.optString("Obsolete"));
                 addTA.setEnabled(true);
+                ChangeState.setEnabled(true);
+                ChangePic.setEnabled(true);
 
                 loadImageAsync(ApiCaller.serverAddress + "/MedIMG?ImageId=" + MedIDField.getText());
 
@@ -215,12 +171,15 @@ public class MedTab extends JPanel {
 
             }).exceptionally(ex -> {
                 MedName.setText("MedName: Null");
+                DosageForm.setText("DosageForm: Null");
                 Manufacturer.setText("Manufacturer: Null");
                 Country.setText("Country: Null");
                 POM.setText("POM: Null");
                 Brand.setText("Brand: Null");
                 Obsolete.setText("Obsolete: Null");
                 addTA.setEnabled(false);
+                ChangeState.setEnabled(false);
+                ChangePic.setEnabled(false);
                 loadPlaceHolder();
 
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -257,6 +216,60 @@ public class MedTab extends JPanel {
         });
 
 
+        AddMed.putClientProperty("JButton.buttonType", "roundRect");
+        AddMed.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
+        AddMed.addActionListener(e ->{
+            JDialog dialog = new JDialog((Frame) null, "AddMedForm", true);
+            dialog.setContentPane(new AddMedForm());
+            dialog.setSize(900, 500);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        });
+
+
+        ChangeState.setEnabled(false);
+        ChangeState.putClientProperty("JButton.buttonType", "roundRect");
+        ChangeState.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
+        ChangeState.addActionListener(e -> {
+            JSONObject body = new JSONObject();
+            body.put("Med_id", MedIDField.getText());
+
+            ApiCaller.PutRequest("/change_med_state", body).thenAccept(response -> {
+                JOptionPane.showMessageDialog(null, response, "Success", JOptionPane.INFORMATION_MESSAGE);
+                triggerFetch(MedIDField.getText());
+            }).exceptionally(ex -> {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                return null;
+            });
+        });
+
+        ChangePic.setEnabled(false);
+        ChangePic.putClientProperty("JButton.buttonType", "roundRect");
+        ChangePic.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
+        ChangePic.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Select PNG Image");
+            chooser.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
+
+            int result = chooser.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = chooser.getSelectedFile();
+                String MedID = MedIDField.getText();
+
+                if (MedID != null && !MedID.trim().isEmpty()) {
+                    ApiCaller.UploadImage(MedID.trim(), selectedFile).thenAccept(response -> {
+                        JOptionPane.showMessageDialog(this, "Image uploaded successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        triggerFetch(MedID);
+                    }).exceptionally(ex -> {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Upload Error", JOptionPane.ERROR_MESSAGE);
+                        return null;
+                    });
+                }
+            }
+        });
+
+
         MedIDL.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         MedIDField.putClientProperty("JComponent.roundRect", true);
         MedIDField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
@@ -266,6 +279,7 @@ public class MedTab extends JPanel {
         Dose.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
 
         MedName.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        DosageForm.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
         Manufacturer.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
         Country.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
         POM.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
@@ -276,13 +290,14 @@ public class MedTab extends JPanel {
         add(MedIDL, new float[]{0.0225f, 0.05f, 0.1075f, 0.1f, 35.0f});
         add(MedIDField, new float[]{0.08f, 0.05f, 0.72f, 0.1f, 35.0f});
 
-        add(MedImage, new float[]{0.075f, 0.2f, 0.2f, 0.35f, 30.0f});
-        add(MedName, new float[]{0.075f, 0.55f, 0.4f, 0.05f, 30.0f});
-        add(Manufacturer, new float[]{0.075f, 0.6f, 0.4f, 0.05f, 30.0f});
-        add(Country, new float[]{0.075f, 0.65f, 0.4f, 0.05f, 30.0f});
-        add(POM, new float[]{0.075f, 0.7f, 0.4f, 0.05f, 30.0f});
-        add(Brand, new float[]{0.075f, 0.75f, 0.4f, 0.05f, 30.0f});
-        add(Obsolete, new float[]{0.075f, 0.8f, 0.4f, 0.05f, 30.0f});
+        add(MedImage, new float[]{0.068f, 0.1625f, 0.2f, 0.35f, 30.0f});
+        add(MedName, new float[]{0.075f, 0.52f, 0.4f, 0.05f, 30.0f});
+        add(DosageForm, new float[]{0.075f, 0.57f, 0.4f, 0.05f, 30.0f});
+        add(Manufacturer, new float[]{0.075f, 0.62f, 0.4f, 0.05f, 30.0f});
+        add(Country, new float[]{0.075f, 0.67f, 0.4f, 0.05f, 30.0f});
+        add(POM, new float[]{0.075f, 0.72f, 0.4f, 0.05f, 30.0f});
+        add(Brand, new float[]{0.075f, 0.77f, 0.4f, 0.05f, 30.0f});
+        add(Obsolete, new float[]{0.075f, 0.82f, 0.4f, 0.05f, 30.0f});
         add(TA_Box, new float[]{0.525f, 0.8f, 0.1875f, 0.05f, 30.0f});
         add(Unit, new float[]{0.725f, 0.8f, 0.1f, 0.05f, 30.0f});
         add(DoseL, new float[]{0.8325f, 0.8f, 0.05f, 0.05f, 30.0f});
@@ -291,6 +306,10 @@ public class MedTab extends JPanel {
 
         add(TasL, new float[]{0.525f, 0.2f, 0.2f, 0.05f, 30.0f});
         add(MedTAList, new float[]{0.525f, 0.275f, 0.45f, 0.5f, 30.0f});
+
+        add(AddMed, new float[]{0.025f, 0.875f, 0.15f, 0.1f, 30.0f});
+        add(ChangeState, new float[]{0.18f, 0.875f, 0.15f, 0.1f, 30.0f});
+        add(ChangePic, new float[]{0.335f, 0.875f, 0.15f, 0.1f, 30.0f});
 
 
         loadPlaceHolder();
@@ -355,6 +374,64 @@ public class MedTab extends JPanel {
         }
         Image scaled = img.getScaledInstance(MedImage.getWidth(), MedImage.getHeight(), Image.SCALE_SMOOTH);
         MedImage.setIcon(new ImageIcon(scaled));
+    }
+
+    static class TA {
+        int id;
+        String name;
+
+        public TA(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+    TA[] Full_TAs_List;
+    public void populateTAs() {
+
+        ApiCaller.GetRequest("/TAList").thenAccept(response -> {
+
+            JSONArray TAArray = new JSONArray(response);
+
+            Full_TAs_List = new TA[TAArray.length()];
+            for (int i = 0; i < TAArray.length(); i++) {
+                JSONObject ta = TAArray.getJSONObject(i);
+                Full_TAs_List[i] = new TA(ta.getInt("TA_id"), ta.getString("TA"));
+                TA_Box.addItem(Full_TAs_List[i]);
+            }
+
+
+            JTextField editor = (JTextField) TA_Box.getEditor().getEditorComponent();
+
+            editor.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    String input = editor.getText();
+                    TA_Box.hidePopup();
+                    TA_Box.removeAllItems();
+
+                    for (TA ta : Full_TAs_List) {
+                        if (ta.name.toLowerCase().startsWith(input.toLowerCase())) {
+                            TA_Box.addItem(ta);
+                        }
+                    }
+
+                    editor.setText(input);
+                    TA_Box.showPopup();
+                }
+            });
+
+
+        }).exceptionally(ex -> {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        });
+
+
     }
 
 

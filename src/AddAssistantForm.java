@@ -17,24 +17,26 @@ public class AddAssistantForm extends JPanel {
 
     public AddAssistantForm(String ph_id) {
         setLayout(new RelativeLayout());
+        setBackground(MainWindow.BG);
 
-        emailLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
+        emailLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
         emailLabel.setForeground(MainWindow.Tex);
         emailField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         emailField.putClientProperty("JComponent.roundRect", true);
 
-        nameLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
+        nameLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
         nameLabel.setForeground(MainWindow.Tex);
         nameField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         nameField.putClientProperty("JComponent.roundRect", true);
 
-        passwordLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
+        passwordLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
         passwordLabel.setForeground(MainWindow.Tex);
         passwordField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 35));
         passwordField.putClientProperty("JComponent.roundRect", true);
         passwordField.setEchoChar('#');
 
-        showPasswordCheckbox.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+        showPasswordCheckbox.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
+        showPasswordCheckbox.setForeground(MainWindow.Tex);
         showPasswordCheckbox.addActionListener(e -> {
             if (showPasswordCheckbox.isSelected()) {
                 passwordField.setEchoChar((char) 0);
@@ -74,13 +76,13 @@ public class AddAssistantForm extends JPanel {
             });
         });
 
-        add(emailLabel, new float[]{0.1f, 0.05f, 0.4f, 0.1f, 35});
+        add(emailLabel, new float[]{0.1f, 0.05f, 0.4f, 0.1f, 40});
         add(emailField, new float[]{0.1f, 0.15f, 0.8f, 0.1f, 35});
-        add(nameLabel, new float[]{0.1f, 0.3f, 0.4f, 0.1f, 35});
+        add(nameLabel, new float[]{0.1f, 0.3f, 0.4f, 0.1f, 40});
         add(nameField, new float[]{0.1f, 0.4f, 0.8f, 0.1f, 35});
-        add(passwordLabel, new float[]{0.1f, 0.55f, 0.4f, 0.1f, 35});
+        add(passwordLabel, new float[]{0.1f, 0.55f, 0.4f, 0.1f, 40});
         add(passwordField, new float[]{0.1f, 0.65f, 0.7f, 0.1f, 35});
-        add(showPasswordCheckbox, new float[]{0.825f, 0.68f, 0.4f, 0.05f, 25});
+        add(showPasswordCheckbox, new float[]{0.825f, 0.68f, 0.4f, 0.05f, 30});
         add(addButton, new float[]{0.1f, 0.85f, 0.8f, 0.1f, 40});
     }
 }

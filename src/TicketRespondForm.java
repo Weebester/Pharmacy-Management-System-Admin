@@ -13,7 +13,7 @@ public class TicketRespondForm extends JPanel {
 
     public TicketRespondForm(String AccountID, String TicketID) {
         setLayout(new RelativeLayout());
-
+        setBackground(MainWindow.BG);
         // Font & UI Setup
         title.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
         title.setForeground(MainWindow.Tex);

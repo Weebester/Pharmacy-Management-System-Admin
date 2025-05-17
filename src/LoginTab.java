@@ -72,7 +72,7 @@ public class LoginTab extends JPanel {
                 }
         );
 
-        showPasswordCheckbox.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+        showPasswordCheckbox.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
 
         Login.addActionListener(e -> {
             try {

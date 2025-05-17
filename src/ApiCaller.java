@@ -5,11 +5,16 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.json.JSONObject;
+
+import java.io.File;
 import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -225,5 +230,48 @@ public class ApiCaller {
             }
         }, executorService);
     }
+
+    public static CompletableFuture<String> UploadImage(String imageId, File imageFile) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        return CompletableFuture.supplyAsync(() -> {
+            try (CloseableHttpClient client = HttpClients.createDefault()) {
+                HttpPost post = new HttpPost(serverAddress + "/UploadMedIMG");
+
+                MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+                builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+
+                builder.addBinaryBody("image", imageFile, ContentType.create("image/png"), imageFile.getName());
+
+                builder.addTextBody("Med_id", imageId, ContentType.TEXT_PLAIN);
+
+                post.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+                post.setEntity(builder.build());
+
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                String responseBody = client.execute(post, responseHandler);
+
+                if (responseBody == null)
+                    throw new Exception("Received an empty response from the server.");
+
+                return responseBody;
+
+            } catch (HttpResponseException e) {
+                if (e.getStatusCode() == 401) {
+                    Logout();
+                    throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - Session Ended due to invalid or expired token");
+                } else if (e.getStatusCode() == 456)
+                    throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - DataEntity Not Found");
+                else if (e.getStatusCode() == 409)
+                    throw new RuntimeException("HTTP ERROR: " + e.getStatusCode() + " - Failed to complete operation");
+                else
+                    throw new RuntimeException("HTTP Error:" + e.getStatusCode() + " - " + e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException("Unexpected Error: " + e.getMessage(), e);
+            }
+        }, executorService);
+    }
+
 
 }
