@@ -58,8 +58,8 @@ public class MainWindow extends JFrame {
         Tabs.add("Meds", MedT);
         Tabs.add("Tickets",TicketT);
         Tabs.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
-        //SetTabsState(false, false);
-        SetTabsState(true,true);
+        SetTabsState(false, false);
+        //SetTabsState(true,true);
         add(Tabs);
         SetThemeDark(false);
         setVisible(true);

@@ -150,6 +150,7 @@ public class AccountTab extends JPanel {
             if (choice == JOptionPane.YES_OPTION) {
                 ApiCaller.DeleteRequest("/delete_user?FB_ID=" + AccountIDField.getText()).thenAccept(response -> {
                     JOptionPane.showMessageDialog(null, response, "Success", JOptionPane.INFORMATION_MESSAGE);
+                    PhListContent.removeAll();
                     Name.setText("Name: Null");
                     status.setText("Status: Null");
                     email.setText("Email: Null");
