@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TicketRespondForm extends JPanel {
-    JLabel title = new JLabel("Ticket Title");
+    JLabel title = new JLabel("Response Title");
     JTextField titleField = new JTextField();
 
     JLabel content = new JLabel("Message");
@@ -59,7 +59,7 @@ public class TicketRespondForm extends JPanel {
 
 
         // Add components using relative layout
-        add(title, new float[]{0.1f, 0.05f, 0.1f, 0.1f, 40});
+        add(title, new float[]{0.1f, 0.05f, 0.3f, 0.1f, 40});
         add(titleField, new float[]{0.1f, 0.15f, 0.8f, 0.1f, 35});
         add(content, new float[]{0.1f, 0.3f, 0.3f, 0.1f, 40});
         add(messageField, new float[]{0.1f, 0.4f, 0.8f, 0.4f, 35});
