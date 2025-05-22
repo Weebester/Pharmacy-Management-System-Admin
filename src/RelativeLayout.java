@@ -18,7 +18,7 @@ public class RelativeLayout implements LayoutManager2 {
         if (constraint instanceof float[] values && values.length == 5) {
             constraints.put(comp, values);
         } else {
-            throw new IllegalArgumentException("Constraint must be a double[4] array (x, y, width, height)");
+            throw new IllegalArgumentException("Constraint must be a double[5] array (x, y, width, height,font scale)");
         }
     }
 
