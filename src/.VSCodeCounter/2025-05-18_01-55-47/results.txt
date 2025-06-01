@@ -1,0 +1,41 @@
+Date : 2025-05-18 01:55:47
+Directory : e:\Karrar\Projects\MyPharmacyAdmin\src
+Total : 17 files,  2056 codes, 5 comments, 499 blanks, all 2560 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Java     |         17 |      2,056 |          5 |        499 |      2,560 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                          | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                             |         17 |      2,056 |          5 |        499 |      2,560 |
++---------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                      | language | code       | comment    | blank      | total      |
++---------------------------------------------------------------+----------+------------+------------+------------+------------+
+| e:\Karrar\Projects\MyPharmacyAdmin\src\AccountTab.java        | Java     |        187 |          0 |         39 |        226 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\AddAssistantForm.java  | Java     |         73 |          0 |         16 |         89 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\AddManagerForm.java    | Java     |         79 |          0 |         22 |        101 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\AddMedForm.java        | Java     |        144 |          0 |         40 |        184 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\ApiCaller.java         | Java     |        216 |          0 |         62 |        278 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\LoginTab.java          | Java     |         78 |          0 |         21 |         99 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\Main.java              | Java     |         13 |          0 |          2 |         15 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\MainWindow.java        | Java     |         58 |          1 |          9 |         68 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\MedTab.java            | Java     |        356 |          0 |         83 |        439 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\PharmacyTab.java       | Java     |        316 |          0 |         60 |        376 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\RelativeLayout.java    | Java     |         64 |          2 |         21 |         87 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\TaOption.java          | Java     |         34 |          0 |         11 |         45 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\Ticket.java            | Java     |        168 |          0 |         33 |        201 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\TicketRespondForm.java | Java     |         54 |          2 |         14 |         70 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\TicketTab.java         | Java     |        160 |          0 |         51 |        211 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\pharmacyOption.java    | Java     |         28 |          0 |          7 |         35 |
+| e:\Karrar\Projects\MyPharmacyAdmin\src\workerOption.java      | Java     |         28 |          0 |          8 |         36 |
+| Total                                                         |          |      2,056 |          5 |        499 |      2,560 |
++---------------------------------------------------------------+----------+------------+------------+------------+------------+
